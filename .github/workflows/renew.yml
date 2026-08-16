@@ -35,7 +35,7 @@ jobs:
           seleniumbase install chromedriver
 
       - name: 🌐 设置sing-box代理转发
-        continue-on-error: true
+        continue-on-error: false
         env:
           NODE_LINK: ${{ secrets.NODE_LINK }}
         run: |
