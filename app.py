@@ -840,9 +840,10 @@ def login(sb, email, password):
     # ---- 等待登录结果 ----
     try:
         wait_for_url_change(sb, login_page_url, timeout=30)
-        if '/auth/login' not in sb.get_current_url():
-            sb.assert_title('Home | ACLClouds')
-            print("✅ 登录成功！")
+        current_url = sb.get_current_url()
+        if '/auth/login' not in current_url:
+            title = sb.get_title() or ''
+            print(f"✅ 登录成功！标题: {title or '无标题'}，URL: {current_url}")
             return True
         else:
             # 提取错误信息
@@ -850,14 +851,14 @@ def login(sb, email, password):
             try:
                 errors = sb.driver.find_elements(By.CSS_SELECTOR, '.auth-error-text, .alert-danger, .error-message')
                 error_msg = errors[0].text.strip() if errors else ''
-            except:
+            except Exception:
                 pass
             print(f"❌ 登录失败，错误: {error_msg}")
             return False
     except Exception as e:
         print(f"登录过程异常: {e}")
         return False
-    
+
 # 获取当前出口ip
 def get_current_ip(proxy_server: str = "") -> str:
     proxies = None
